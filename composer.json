@@ -1,0 +1,19 @@
+{
+	"name": "drago-ex/project-docker",
+	"type": "drago-project-resource",
+	"description": "Basic configuration of a php server on docker.",
+	"require": {
+		"php": ">=8.3 <9"
+	},
+	"extra": {
+		"drago-project": {
+			"install": {
+				"copy": {
+					"docker": "docker",
+					"docker-compose.dev.yml": "",
+					"docker-compose.yml": ""
+				}
+			}
+		}
+	}
+}
