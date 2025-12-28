@@ -1,0 +1,6 @@
+services:
+
+  # enable the debug tool in the development environment.
+  server:
+    environment:
+      - NETTE_DEBUG=1
