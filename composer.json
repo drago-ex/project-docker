@@ -2,6 +2,7 @@
 	"name": "drago-ex/project-docker",
 	"type": "drago-project-resource",
 	"description": "Basic configuration of a php server on docker.",
+	"license": ["MIT"],
 	"require": {
 		"php": ">=8.3 <9"
 	},
