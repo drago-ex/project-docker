@@ -4,6 +4,8 @@ services:
   server:
     build:
       context: docker
+    environment:
+      NETTE_DEBUG: ${NETTE_DEBUG:-0}
     image: php-server
     restart: always
     volumes:
