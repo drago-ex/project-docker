@@ -7,4 +7,4 @@ Basic configuration of a php server on docker.
 
 ## Docker commands
 All docker commands are located in this file:
-https://github.com/drago-ex/project-docker/blob/main/package.json
+- https://github.com/drago-ex/project-docker/blob/main/package.json
