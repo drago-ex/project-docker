@@ -2,7 +2,7 @@
   "scripts": {
 	"docker:build": "docker compose build",
 	"docker:dev": "docker compose up -d",
-	"docker:production": "docker compose --env-file .env.production up -d",
+	"docker:production": "docker compose --env-file docker/.env.production up -d",
 	"docker:down": "docker compose down --volumes --remove-orphans"
   }
 }
