@@ -8,6 +8,7 @@
 	},
 	"extra": {
 		"drago-project": {
+			"skip": false,
 			"install": {
 				"copy": {
 					"docker": "docker",

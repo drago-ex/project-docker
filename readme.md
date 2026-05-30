@@ -11,6 +11,10 @@ Basic configuration of a php server on docker.
 composer require drago-ex/project-docker
 ```
 
+## Project files
+The package has `extra.drago-project.skip` set to `false`, so `drago-install` copies the configured files automatically.
+If `skip` is set to `true`, copy those files manually according to the `copy` section in `composer.json`.
+
 ## Docker commands
 All docker commands are located in this file:
 - https://github.com/drago-ex/project-docker/blob/main/package.json
