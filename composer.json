@@ -1,13 +1,13 @@
 {
 	"name": "drago-ex/project-docker",
-	"type": "drago-project-resource",
+	"type": "drago-tools-resource",
 	"description": "Basic configuration of a php server on docker.",
 	"license": ["MIT"],
 	"require": {
 		"php": ">=8.3 <9"
 	},
 	"extra": {
-		"drago-project": {
+		"drago-tools": {
 			"install": {
 				"copy": {
 					"docker": "docker",
