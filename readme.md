@@ -1,6 +1,6 @@
-# Drago docker
+# Drago Project Docker
 
-Basic configuration of a php server on docker.
+Basic Docker configuration for a PHP server.
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://github.com/drago-ex/project-docker/blob/main/license)
 [![PHP version](https://badge.fury.io/ph/drago-ex%2Fproject-docker.svg)](https://badge.fury.io/ph/drago-ex%2Fproject-docker)
