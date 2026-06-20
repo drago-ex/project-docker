@@ -18,5 +18,4 @@ in this package's `composer.json`. To skip this package, set `"skip": true` unde
 `extra.drago-tools.packages.<package-name>` in your root `composer.json`.
 
 ## Docker commands
-All docker commands are located in this file:
-- https://github.com/drago-ex/project-docker/blob/main/package.json
+The available Docker scripts are listed in [`package.json`](https://github.com/drago-ex/project-docker/blob/main/package.json).
