@@ -6,8 +6,8 @@ LABEL maintainer="Zdeněk Papučík <zdenek.papucik@gmail.com>"
 ARG DEBIAN_FRONTEND=noninteractive
 
 # run commands
-RUN apt update \
-    && apt upgrade -y \
+RUN apt-get update \
+    && apt-get upgrade -y \
     && a2enmod rewrite \
     && rm -rf /var/lib/apt/lists/*
 

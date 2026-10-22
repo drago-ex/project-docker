@@ -26,3 +26,4 @@ in this package's `composer.json`. To skip this package, set `"skip": true` unde
 ## Docker commands
 
 The available Docker scripts are listed in [`package.json`](https://github.com/drago-ex/project-docker/blob/main/package.json).
+It is not copied into the project; add the scripts you want to the `scripts` of your own `package.json`.
