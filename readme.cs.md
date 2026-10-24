@@ -25,6 +25,11 @@ který musí být v projektu nainstalovaný. Bez něj zkopírujte soubory ručn�
 v `composer.json` tohoto balíčku. Pro přeskočení balíčku nastavte `"skip": true` v
 `extra.drago-tools.packages.<package-name>` v kořenovém `composer.json`.
 
+## Rozšíření PHP
+
+Obraz má GD (JPEG, PNG, WebP) pro zmenšování nahraných obrázků; `docker/conf/php.ini` nastavuje limity nahrávání
+(64 MB) a `memory_limit` (256 MB, stačí na zmenšení fotek).
+
 ## Příkazy pro Docker
 
 Dostupné skripty pro Docker jsou v [`package.json`](https://github.com/drago-ex/project-docker/blob/main/package.json).

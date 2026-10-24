@@ -25,6 +25,11 @@ which must be installed in your project. Without it, copy the files manually acc
 in this package's `composer.json`. To skip this package, set `"skip": true` under
 `extra.drago-tools.packages.<package-name>` in your root `composer.json`.
 
+## PHP extensions
+
+The image has GD (JPEG, PNG, WebP) for resizing uploaded images; `docker/conf/php.ini` sets the upload limits
+(64 MB) and `memory_limit` (256 MB, enough to resize photos).
+
 ## Docker commands
 
 The available Docker scripts are listed in [`package.json`](https://github.com/drago-ex/project-docker/blob/main/package.json).
