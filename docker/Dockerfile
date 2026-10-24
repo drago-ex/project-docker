@@ -5,13 +5,14 @@ LABEL maintainer="Zdeněk Papučík <zdenek.papucik@gmail.com>"
 # build-time customization
 ARG DEBIAN_FRONTEND=noninteractive
 
-# run commands; GD (with JPEG and WebP) resizes uploaded images, e.g. the cover images of project-blog
+# run commands; GD (with JPEG and WebP) resizes uploaded images, e.g. the cover images of project-blog;
+# intl makes slugs from names (Nette Strings::webalize), e.g. the categories of project-blog
 RUN apt-get update \
     && apt-get upgrade -y \
     && a2enmod rewrite \
-    && apt-get install -y --no-install-recommends libjpeg62-turbo-dev libpng-dev libwebp-dev \
+    && apt-get install -y --no-install-recommends libjpeg62-turbo-dev libpng-dev libwebp-dev libicu-dev \
     && docker-php-ext-configure gd --with-jpeg --with-webp \
-    && docker-php-ext-install gd \
+    && docker-php-ext-install gd intl \
     && rm -rf /var/lib/apt/lists/*
 
 # RUN a2enmod ssl

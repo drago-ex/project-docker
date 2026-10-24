@@ -27,7 +27,7 @@ in this package's `composer.json`. To skip this package, set `"skip": true` unde
 
 ## PHP extensions
 
-The image has GD (JPEG, PNG, WebP) for resizing uploaded images; `docker/conf/php.ini` sets the upload limits
+The image has GD (JPEG, PNG, WebP) for resizing uploaded images and intl for slugs made from names; `docker/conf/php.ini` sets the upload limits
 (64 MB) and `memory_limit` (256 MB, enough to resize photos).
 
 ## Docker commands
