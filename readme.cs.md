@@ -27,8 +27,8 @@ v `composer.json` tohoto balíčku. Pro přeskočení balíčku nastavte `"skip"
 
 ## Rozšíření PHP
 
-Obraz má GD (JPEG, PNG, WebP) pro zmenšování nahraných obrázků a intl pro slugy vytvořené z názvů; `docker/conf/php.ini` nastavuje limity nahrávání
-(64 MB) a `memory_limit` (256 MB, stačí na zmenšení fotek).
+Obraz má GD (JPEG, PNG, WebP) pro zmenšování nahraných obrázků a intl pro slugy vytvořené z názvů;
+`docker/conf/php.ini` nastavuje limity nahrávání (64 MB) a `memory_limit` (256 MB, stačí na zmenšení fotek).
 
 ## Příkazy pro Docker
 
