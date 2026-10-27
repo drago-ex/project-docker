@@ -1,7 +1,5 @@
 # Drago Project Docker
 
-[English](readme.md) | Čeština
-
 Základní konfigurace Dockeru pro PHP server.
 
 [![PHP version](https://badge.fury.io/ph/drago-ex%2Fproject-docker.svg)](https://badge.fury.io/ph/drago-ex%2Fproject-docker)
