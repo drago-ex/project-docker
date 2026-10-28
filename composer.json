@@ -11,7 +11,8 @@
 			"install": {
 				"copy": {
 					"docker": "docker",
-					"docker-compose.yaml": ""
+					"docker-compose.yaml": "",
+					".dockerignore": ""
 				}
 			}
 		}

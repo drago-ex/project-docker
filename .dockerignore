@@ -1,0 +1,8 @@
+# not copied into the image (docker/Dockerfile-app)
+.git
+.idea
+node_modules
+temp
+log
+www/upload
+docker/mysql

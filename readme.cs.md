@@ -22,6 +22,15 @@ composer require drago-ex/project-docker
 Soubory do projektu kopíruje [drago-ex/project-tools](https://github.com/drago-ex/project-tools)
 podle nastavení v `extra.drago-tools` v `composer.json` tohoto balíčku.
 
+## Projekt v obrazu
+
+Projekt se kopíruje do obrazu (`docker/Dockerfile-app`), místo aby se připojoval z vašeho disku, což je na
+Windows pomalé. Během práce spusťte `docker compose watch` (nebo `npm run docker:dev`): každou změnu v `app/`
+a `www/` zkopíruje do běžícího kontejneru a při změně `composer.lock` sestaví nový obraz. Připojené jsou jen
+`log/` a `www/upload/`, takže logy jsou vidět a nahrané soubory přežijí nový obraz; co uvádí `.dockerignore`,
+se nekopíruje. Po změně `vendor/` bez změny `composer.lock` sestavte obraz znovu pomocí
+`docker compose up -d --build`.
+
 ## Rozšíření PHP
 
 Obraz má GD (JPEG, PNG, WebP) pro zmenšování nahraných obrázků a intl pro slugy vytvořené z názvů;

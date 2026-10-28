@@ -33,3 +33,7 @@ Do not claim behavior is covered by tests unless you find and run a relevant sui
 - Keep package-specific configuration, resources, and migrations in their established directories. Do not edit generated or consuming-project files without confirming they are part of this repository’s intended output.
 - Add or update focused tests for behavioral changes when this package has a runnable test setup. Do not invent test commands; use only the scripts and configuration present here.
 - Update README examples and Composer metadata when a public API or supported requirement changes.
+
+## Image and watch
+- The project is copied into the image (`docker/Dockerfile-app`) instead of a bind mount of the project, which is very slow on Windows/WSL2 (2026-10-28, measured ~4 s → ~0.07 s per request); `docker compose watch` (`develop.watch`) syncs `app/` and `www/` and rebuilds on `composer.lock`. Only `log/` and `www/upload/` are bind mounts. `.dockerignore` is copied into the project.
+- The runtime `docker/Dockerfile` is the profiled service `php` (never started), passed to the server build as `additional_contexts: php: service:php`, so `docker compose build` builds the whole chain without `docker build -t php-server`. project-docker-db inserts its `php-db` service by overriding that context.

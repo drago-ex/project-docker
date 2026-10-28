@@ -22,6 +22,15 @@ composer require drago-ex/project-docker
 The files are copied into the project by [drago-ex/project-tools](https://github.com/drago-ex/project-tools),
 as set in `extra.drago-tools` of this package's `composer.json`.
 
+## Project in the image
+
+The project is copied into the image (`docker/Dockerfile-app`) instead of being mounted from your disk, which is
+slow on Windows. Run `docker compose watch` (or `npm run docker:dev`) while you work: it copies every change of
+`app/` and `www/` into the running container and builds a new image when `composer.lock` changes. Only `log/`
+and `www/upload/` are mounted, so logs are visible and uploaded files outlast a new image; what `.dockerignore`
+lists is not copied. After changing `vendor/` without `composer.lock`, build the image again with
+`docker compose up -d --build`.
+
 ## PHP extensions
 
 The image has GD (JPEG, PNG, WebP) for resizing uploaded images and intl for slugs made from names;

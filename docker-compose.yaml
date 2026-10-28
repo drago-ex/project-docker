@@ -1,14 +1,37 @@
 services:
 
-  # php server settings.
+  # the PHP runtime (docker/Dockerfile), only built as the base of the server image
+  php:
+    build: docker
+    profiles: [build]
+
+  # php server settings; the project is copied into the image (docker/Dockerfile-app),
+  # `docker compose watch` copies changed files into the container
   server:
     build:
-      context: docker
+      context: .
+      dockerfile: docker/Dockerfile-app
+      additional_contexts:
+        php: service:php
     environment:
       NETTE_DEBUG: ${NETTE_DEBUG:-1}
-    image: php-server
     restart: always
+    # what the application writes and a new image must keep: logs and uploaded files
     volumes:
-      - ./:/var/www/html/
+      - ./log/:/var/www/html/log/
+      - ./www/upload/:/var/www/html/www/upload/
     ports:
       - "8080:80"
+    develop:
+      watch:
+        - action: sync
+          path: ./app
+          target: /var/www/html/app
+        - action: sync
+          path: ./www
+          target: /var/www/html/www
+          ignore:
+            - upload/
+        # vendor is in the image, so changed packages need a new one
+        - action: rebuild
+          path: ./composer.lock

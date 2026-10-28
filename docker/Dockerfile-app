@@ -1,0 +1,11 @@
+# the project inside the image: a bind mount of the project directory is slow on Windows (WSL2);
+# `docker compose watch` copies changed files into the running container (develop.watch in docker-compose.yaml)
+# php is the runtime of docker/Dockerfile, given by additional_contexts in docker-compose.yaml
+FROM php
+
+WORKDIR /var/www/html
+COPY . .
+
+# the application writes its cache, sessions, logs and uploads
+RUN mkdir -p temp/sessions log www/upload \
+    && chown -R www-data:www-data temp log www/upload
