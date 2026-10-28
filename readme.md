@@ -8,6 +8,7 @@ Basic Docker configuration for a PHP server.
 ## Requirements
 
 - PHP >= 8.3, < 9
+- [Drago Project](https://github.com/drago-ex/project)
 - Docker
 
 ## Installation
