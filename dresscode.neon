@@ -1,0 +1,8 @@
+use:
+	- nette
+	- modernizations
+
+paths:
+	- www
+
+nameResolution: certain
