@@ -36,6 +36,21 @@ lists is not copied. After changing `vendor/` without `composer.lock`, build the
 The image has GD (JPEG, PNG, WebP) for resizing uploaded images and intl for slugs made from names;
 `docker/conf/php.ini` sets the upload limits (64 MB) and `memory_limit` (256 MB, enough to resize photos).
 
+## Security
+
+- Debug mode (Tracy) is off unless asked for: `npm run docker:dev` loads `docker/.env.development` (`NETTE_DEBUG=1`,
+  and `PHP_EXCEPTION_IGNORE_ARGS=0` keeps function arguments in stack traces), a plain `docker compose up` and
+  `npm run docker:production` run without it.
+- The server listens only on `127.0.0.1:8080`. To publish it on every interface, set `SERVER_PORT=8080`; Docker
+  bypasses firewalls such as `ufw`, so in production prefer an HTTPS reverse proxy in front of it.
+- PHP never runs in `www/upload/`, and an uploaded `.htaccess` is ignored.
+- `docker/conf/php.ini` hides the PHP version, logs errors instead of showing them, leaves function arguments out
+  of stack traces outside development, limits `max_execution_time` to 60 s and makes session cookies strict, HttpOnly and SameSite.
+  Behind HTTPS, uncomment `session.cookie_secure`; `disable_functions` is ready to uncomment when nothing in the
+  container runs shell commands (the PHP CLI, e.g. Composer, reads the same file).
+- Apache hides its version (`docker/conf/security.conf`) and sends `X-Content-Type-Options` and `Referrer-Policy`.
+- Rebuild the image regularly with `docker compose build --pull` to get security fixes of PHP and Debian.
+
 ## Docker commands
 
 The available Docker scripts are listed in [`package.json`](https://github.com/drago-ex/project-docker/blob/main/package.json).

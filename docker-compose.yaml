@@ -13,15 +13,20 @@ services:
       dockerfile: docker/Dockerfile-app
       additional_contexts:
         php: service:php
+    # debug mode (Tracy) and function arguments in stack traces only when asked for: docker/.env.development
     environment:
-      NETTE_DEBUG: ${NETTE_DEBUG:-1}
+      NETTE_DEBUG: ${NETTE_DEBUG:-0}
+      PHP_EXCEPTION_IGNORE_ARGS: ${PHP_EXCEPTION_IGNORE_ARGS:-1}
     restart: always
+    security_opt:
+      - no-new-privileges:true
     # what the application writes and a new image must keep: logs and uploaded files
     volumes:
       - ./log/:/var/www/html/log/
       - ./www/upload/:/var/www/html/www/upload/
+    # only on this computer; SERVER_PORT=8080 publishes it on every interface (Docker bypasses ufw)
     ports:
-      - "8080:80"
+      - "${SERVER_PORT:-127.0.0.1:8080}:80"
     develop:
       watch:
         - action: sync

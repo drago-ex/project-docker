@@ -9,7 +9,7 @@ ARG DEBIAN_FRONTEND=noninteractive
 # intl makes slugs from names (Nette Strings::webalize), e.g. the categories of project-blog
 RUN apt-get update \
     && apt-get upgrade -y \
-    && a2enmod rewrite \
+    && a2enmod rewrite headers \
     && apt-get install -y --no-install-recommends libjpeg62-turbo-dev libpng-dev libwebp-dev libicu-dev \
     && docker-php-ext-configure gd --with-jpeg --with-webp \
     && docker-php-ext-install gd intl \
@@ -20,6 +20,7 @@ RUN apt-get update \
 # php configuration
 COPY conf/php.ini /usr/local/etc/php/conf.d
 COPY conf/000-default.conf /etc/apache2/sites-available/
+COPY conf/security.conf /etc/apache2/conf-available/
 
 # the ports
 EXPOSE 80
