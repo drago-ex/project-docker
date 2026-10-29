@@ -37,3 +37,8 @@ Do not claim behavior is covered by tests unless you find and run a relevant sui
 ## Image and watch
 - The project is copied into the image (`docker/Dockerfile-app`) instead of a bind mount of the project, which is very slow on Windows/WSL2 (2026-10-28, measured ~4 s → ~0.07 s per request); `docker compose watch` (`develop.watch`) syncs `app/` and `www/` and rebuilds on `composer.lock`. Only `log/` and `www/upload/` are bind mounts. `.dockerignore` is copied into the project.
 - The runtime `docker/Dockerfile` is the profiled service `php` (never started), passed to the server build as `additional_contexts: php: service:php`, so `docker compose build` builds the whole chain without `docker build -t php-server`. project-docker-db inserts its `php-db` service by overriding that context.
+
+## Security
+- `zend.exception_ignore_args` reads `${PHP_EXCEPTION_IGNORE_ARGS:-1}` (PHP 8.3+ ini fallback), so arguments stay out of stack traces when the variable is missing; only `docker/.env.development` sets 0.
+- `www/upload/` runs no PHP (`engine off`, `.php`/`.phtml`/`.phar` denied, `AllowOverride None`) and sends a sandboxing `Content-Security-Policy`, so an uploaded SVG/HTML runs no script (verified 2026-10-29 in a built image: SVG gets the header, PHP files 403).
+- Behind a reverse proxy the project needs `http: proxy:` (README): project-auth limits sign-ins by `getRemoteAddress()`, and Nette marks the session cookie secure only when it sees HTTPS.
