@@ -34,7 +34,7 @@ se nekopíruje. Po změně `vendor/` bez změny `composer.lock` sestavte obraz z
 ## Rozšíření PHP
 
 Obraz má GD (JPEG, PNG, WebP) pro zmenšování nahraných obrázků a intl pro slugy vytvořené z názvů;
-`docker/conf/php.ini` nastavuje limity nahrávání (64 MB) a `memory_limit` (256 MB, stačí na zmenšení fotek).
+`docker/php.ini` nastavuje limity nahrávání (64 MB) a `memory_limit` (256 MB, stačí na zmenšení fotek).
 
 ## Zabezpečení
 
@@ -44,7 +44,7 @@ Obraz má GD (JPEG, PNG, WebP) pro zmenšování nahraných obrázků a intl pro
 - Server poslouchá jen na `127.0.0.1:8080`. Pro zveřejnění na všech rozhraních nastavte `SERVER_PORT=8080`;
   Docker obchází firewally jako `ufw`, proto na produkci raději použijte před serverem reverzní proxy s HTTPS.
 - V `www/upload/` se PHP nikdy nespustí a nahraný `.htaccess` se ignoruje.
-- `docker/conf/php.ini` skrývá verzi PHP, chyby loguje místo zobrazení, mimo vývoj vynechává argumenty
+- `docker/php.ini` skrývá verzi PHP, chyby loguje místo zobrazení, mimo vývoj vynechává argumenty
   funkcí ze stack trace, omezuje `max_execution_time` na 60 s a session cookies jsou striktní, HttpOnly a SameSite. Za HTTPS
   odkomentujte `session.cookie_secure`; `disable_functions` je připravené k odkomentování, pokud v kontejneru nic
   nespouští shellové příkazy (PHP CLI, např. Composer, čte stejný soubor).

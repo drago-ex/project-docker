@@ -34,7 +34,7 @@ lists is not copied. After changing `vendor/` without `composer.lock`, build the
 ## PHP extensions
 
 The image has GD (JPEG, PNG, WebP) for resizing uploaded images and intl for slugs made from names;
-`docker/conf/php.ini` sets the upload limits (64 MB) and `memory_limit` (256 MB, enough to resize photos).
+`docker/php.ini` sets the upload limits (64 MB) and `memory_limit` (256 MB, enough to resize photos).
 
 ## Security
 
@@ -44,7 +44,7 @@ The image has GD (JPEG, PNG, WebP) for resizing uploaded images and intl for slu
 - The server listens only on `127.0.0.1:8080`. To publish it on every interface, set `SERVER_PORT=8080`; Docker
   bypasses firewalls such as `ufw`, so in production prefer an HTTPS reverse proxy in front of it.
 - PHP never runs in `www/upload/`, and an uploaded `.htaccess` is ignored.
-- `docker/conf/php.ini` hides the PHP version, logs errors instead of showing them, leaves function arguments out
+- `docker/php.ini` hides the PHP version, logs errors instead of showing them, leaves function arguments out
   of stack traces outside development, limits `max_execution_time` to 60 s and makes session cookies strict, HttpOnly and SameSite.
   Behind HTTPS, uncomment `session.cookie_secure`; `disable_functions` is ready to uncomment when nothing in the
   container runs shell commands (the PHP CLI, e.g. Composer, reads the same file).

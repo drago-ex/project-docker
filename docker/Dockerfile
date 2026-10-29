@@ -18,7 +18,7 @@ RUN apt-get update \
 # RUN a2enmod ssl
 
 # php configuration
-COPY conf/php.ini /usr/local/etc/php/conf.d
+COPY php.ini /usr/local/etc/php/conf.d
 COPY conf/000-default.conf /etc/apache2/sites-available/
 COPY conf/security.conf /etc/apache2/conf-available/
 
