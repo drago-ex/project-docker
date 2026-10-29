@@ -43,11 +43,19 @@ Obraz má GD (JPEG, PNG, WebP) pro zmenšování nahraných obrázků a intl pro
   `docker compose up` a `npm run docker:production` běží bez něj.
 - Server poslouchá jen na `127.0.0.1:8080`. Pro zveřejnění na všech rozhraních nastavte `SERVER_PORT=8080`;
   Docker obchází firewally jako `ufw`, proto na produkci raději použijte před serverem reverzní proxy s HTTPS.
-- V `www/upload/` se PHP nikdy nespustí a nahraný `.htaccess` se ignoruje.
+- V `www/upload/` se PHP nikdy nespustí a nahraný `.htaccess` se ignoruje. Soubory odtud se posílají
+  s `Content-Security-Policy`, která nespustí žádný skript, takže nahraný SVG nebo HTML soubor otevřený přímo nemůže web napadnout.
 - `docker/php.ini` skrývá verzi PHP, chyby loguje místo zobrazení, mimo vývoj vynechává argumenty
-  funkcí ze stack trace, omezuje `max_execution_time` na 60 s a session cookies jsou striktní, HttpOnly a SameSite. Za HTTPS
-  odkomentujte `session.cookie_secure`; `disable_functions` je připravené k odkomentování, pokud v kontejneru nic
-  nespouští shellové příkazy (PHP CLI, např. Composer, čte stejný soubor).
+  funkcí ze stack trace (i když `PHP_EXCEPTION_IGNORE_ARGS` není nastavené), omezuje `max_execution_time`
+  na 60 s a session cookies jsou striktní, HttpOnly a SameSite. `disable_functions` je připravené k odkomentování,
+  pokud v kontejneru nic nespouští shellové příkazy (PHP CLI, např. Composer, čte stejný soubor).
+- Za reverzní proxy nastavte v `app.neon`, aby jí Nette důvěřovalo, takže uvidí IP adresu návštěvníka a HTTPS:
+  ```neon
+  http:
+  	proxy: 172.16.0.0/12  # the address or range of your proxy
+  ```
+  Bez toho přicházejí všechny požadavky z adresy proxy, takže limit přihlášení z project-auth by zablokoval všechny
+  návštěvníky najednou a Nette by session cookie neoznačilo jako secure (na HTTPS to dělá samo).
 - Apache skrývá svou verzi (`docker/conf/security.conf`) a posílá `X-Content-Type-Options` a `Referrer-Policy`.
 - Obraz pravidelně sestavujte znovu pomocí `docker compose build --pull`, aby obsahoval bezpečnostní opravy PHP
   a Debianu.

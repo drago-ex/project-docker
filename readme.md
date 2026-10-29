@@ -43,11 +43,19 @@ The image has GD (JPEG, PNG, WebP) for resizing uploaded images and intl for slu
   `npm run docker:production` run without it.
 - The server listens only on `127.0.0.1:8080`. To publish it on every interface, set `SERVER_PORT=8080`; Docker
   bypasses firewalls such as `ufw`, so in production prefer an HTTPS reverse proxy in front of it.
-- PHP never runs in `www/upload/`, and an uploaded `.htaccess` is ignored.
+- PHP never runs in `www/upload/`, and an uploaded `.htaccess` is ignored. Files from there are served with
+  a `Content-Security-Policy` that runs no script, so an uploaded SVG or HTML file opened directly cannot attack the site.
 - `docker/php.ini` hides the PHP version, logs errors instead of showing them, leaves function arguments out
-  of stack traces outside development, limits `max_execution_time` to 60 s and makes session cookies strict, HttpOnly and SameSite.
-  Behind HTTPS, uncomment `session.cookie_secure`; `disable_functions` is ready to uncomment when nothing in the
-  container runs shell commands (the PHP CLI, e.g. Composer, reads the same file).
+  of stack traces outside development (also when `PHP_EXCEPTION_IGNORE_ARGS` is not set), limits `max_execution_time`
+  to 60 s and makes session cookies strict, HttpOnly and SameSite. `disable_functions` is ready to uncomment when
+  nothing in the container runs shell commands (the PHP CLI, e.g. Composer, reads the same file).
+- Behind a reverse proxy, tell Nette to trust it in `app.neon`, so it sees the visitor's IP address and HTTPS:
+  ```neon
+  http:
+  	proxy: 172.16.0.0/12  # the address or range of your proxy
+  ```
+  Without it every request comes from the proxy's address, so the sign-in limit of project-auth would block all
+  visitors at once, and Nette would not mark the session cookie secure (it does so by itself on HTTPS).
 - Apache hides its version (`docker/conf/security.conf`) and sends `X-Content-Type-Options` and `Referrer-Policy`.
 - Rebuild the image regularly with `docker compose build --pull` to get security fixes of PHP and Debian.
 
