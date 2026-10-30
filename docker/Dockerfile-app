@@ -6,6 +6,6 @@ FROM php
 WORKDIR /var/www/html
 COPY . .
 
-# the application writes its cache, sessions, logs and uploads
-RUN mkdir -p temp/sessions log www/upload \
-    && chown -R www-data:www-data temp log www/upload
+# the application writes its cache, sessions, logs, uploads and the files of this environment (local/, not copied)
+RUN mkdir -p temp/sessions log www/upload local \
+    && chown -R www-data:www-data temp log www/upload local
