@@ -6,6 +6,9 @@ FROM php
 WORKDIR /var/www/html
 COPY . .
 
-# the application writes its cache, sessions, logs, uploads and the files of this environment (local/, not copied)
-RUN mkdir -p temp/sessions log www/upload local \
-    && chown -R www-data:www-data temp log www/upload local
+# the application writes its cache, sessions, logs and uploads; bin/project-setup runs as www-data, and the
+# migrations write their report of this database to .drago-project/; nothing else is writable (the php image gives
+# www-data the project root with 1777)
+RUN mkdir -p temp/sessions log www/upload .drago-project \
+    && chown root:root . && chmod 755 . \
+    && chown -R www-data:www-data temp log www/upload .drago-project

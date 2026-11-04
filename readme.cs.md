@@ -28,7 +28,7 @@ Projekt se kopíruje do obrazu (`docker/Dockerfile-app`), místo aby se připojo
 Windows pomalé. Během práce spusťte `docker compose watch` (nebo `npm run docker:dev`): každou změnu v `app/`
 a `www/` zkopíruje do běžícího kontejneru a při změně `composer.lock` sestaví nový obraz. Připojené jsou jen
 `log/` a `www/upload/`, takže logy jsou vidět a nahrané soubory přežijí nový obraz; co uvádí `.dockerignore`,
-se nekopíruje (`local/`, soubory zapsané pro jedno prostředí, připojují balíčky, které ho potřebují).
+se nekopíruje.
 Po změně `vendor/` bez změny `composer.lock` sestavte obraz znovu pomocí `docker compose up -d --build`.
 
 ## Rozšíření PHP
