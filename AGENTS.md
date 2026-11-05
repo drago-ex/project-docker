@@ -1,44 +1,37 @@
 # Agent Guide
 
-Use this file as package-specific guidance when working in this repository. Keep changes aligned with the existing public API, project conventions, and supported PHP range.
+`drago-ex/project-docker` (type drago-tools-resource, PHP >=8.3 <9): the Docker setup of every Drago project
+(required by drago-ex/project). The workspace rules are in `../AGENTS.md`.
 
-## Package Overview
-- **Package**: `drago-ex/project-docker`
-- **Type**: drago-tools-resource
-- **Purpose**: Basic configuration of a php server on docker.
-- **PHP**: >=8.3 <9
-- **License**: MIT
-
-## Repository Layout
-- `docker/`: Docker configuration.
-- `www/`: web root files.
-- `.github/`: CI workflows; keep their PHP versions and commands consistent with Composer and the package scripts.
-- `composer.json`: package metadata, dependency constraints, autoloading, and available Composer scripts.
-
-## Essential Commands
-
-```bash
-# No test or static-analysis Composer script is defined in this package.
-```
-
-## Tests
-
-This repository does not currently define a test script in `composer.json` or contain a `tests/` directory.
-Do not claim behavior is covered by tests unless you find and run a relevant suite. When adding a test suite, follow the package’s existing Nette Tester setup if one is present and add an explicit Composer script.
-
-## Conventions & Rules
-
-- Preserve backward compatibility unless the task explicitly permits a breaking change. Check callers and public signatures before changing behavior.
-- Follow the existing PHP style: strict types, explicit parameter and return types, tabs for indentation, and single-quoted strings where practical. Match nearby code when a convention is unclear.
-- Keep package-specific configuration, resources, and migrations in their established directories. Do not edit generated or consuming-project files without confirming they are part of this repository’s intended output.
-- Add or update focused tests for behavioral changes when this package has a runnable test setup. Do not invent test commands; use only the scripts and configuration present here.
-- Update README examples and Composer metadata when a public API or supported requirement changes.
+## Layout
+- `docker/Dockerfile` (the PHP runtime with GD and intl), `Dockerfile-app` (the project in the image), `php.ini`,
+  `conf/` (Apache), `.env.development`, `.env.production`.
+- `docker-compose.yaml`, `.dockerignore`: copied into the project.
+- `www/index.php`: `phpinfo()` for trying the image alone; it is not copied into projects.
+- The rules of `www/upload/` are in `docker/conf/000-default.conf`.
+- `package.json`: the npm scripts, kept equal to those of drago-ex/project (not copied).
 
 ## Image and watch
-- The project is copied into the image (`docker/Dockerfile-app`) instead of a bind mount of the project, which is very slow on Windows/WSL2 (2026-10-28, measured ~4 s → ~0.07 s per request); `docker compose watch` (`develop.watch`) syncs `app/` and `www/` and rebuilds on `composer.lock`. Only `log/` and `www/upload/` are bind mounts. `local/` (e.g. `db.neon` of project-docker-db) is copied into the image like the rest of the project and project-docker-db adds a watch rule for it (user, 2026-11-05: the web installer that wrote `db.neon` is gone, so nothing in the container writes there). `.dockerignore` is copied into the project. `.drago-project/` is owned by www-data in the image (2026-11-05; `local/` is not, nothing writes there; the project root is chowned back to root with 755, because the php image gives www-data `/var/www/html` with 1777): `bin/project-setup` of drago-ex/project runs there as www-data and drago-ex/migration writes `migration.json` (a report of that database); the rest of the project stays root-owned, so files the project keeps (`assets.md`, copied configs) are written on the host.
-- The runtime `docker/Dockerfile` is the profiled service `php` (never started), passed to the server build as `additional_contexts: php: service:php`, so `docker compose build` builds the whole chain without `docker build -t php-server`. project-docker-db inserts its `php-db` service by overriding that context.
+- The project is copied into the image (`Dockerfile-app`) instead of a bind mount, which is very slow on
+  Windows/WSL2. `docker compose watch` (`develop.watch`) syncs `app/` and `www/` and rebuilds on `composer.lock`.
+  Only `log/` and `www/upload/` are bind mounts. `local/` is copied like the rest; project-docker-db adds a watch
+  rule for it.
+- Writable for www-data in the image are only `temp`, `log`, `www/upload` and `.drago-project`; the project root is
+  chowned back to root with 755, because the php image gives www-data `/var/www/html` with 1777.
+  `bin/project-setup` of drago-ex/project runs in the container as www-data and drago-ex/migration writes its
+  report to `.drago-project/`; files the project keeps (`assets.md`, copied configs) are written on the host.
+- `docker/Dockerfile` is the profiled service `php` (never started), passed to the server build as
+  `additional_contexts: php: service:php`, so `docker compose build` builds the whole chain. project-docker-db
+  inserts its `php-db` service by overriding that context.
 
 ## Security
-- `zend.exception_ignore_args` reads `${PHP_EXCEPTION_IGNORE_ARGS:-1}` (PHP 8.3+ ini fallback), so arguments stay out of stack traces when the variable is missing; only `docker/.env.development` sets 0.
-- `www/upload/` runs no PHP (`engine off`, `.php`/`.phtml`/`.phar` denied, `AllowOverride None`) and sends a sandboxing `Content-Security-Policy`, so an uploaded SVG/HTML runs no script (verified 2026-10-29 in a built image: SVG gets the header, PHP files 403).
-- Behind a reverse proxy the project needs `http: proxy:` (README): project-auth limits sign-ins by `getRemoteAddress()`, and Nette marks the session cookie secure only when it sees HTTPS.
+- `zend.exception_ignore_args` reads `${PHP_EXCEPTION_IGNORE_ARGS:-1}`, so arguments stay out of stack traces
+  when the variable is missing; only `.env.development` sets 0 (and `NETTE_DEBUG=1`).
+- The server port is `${SERVER_PORT:-127.0.0.1:8080}`, because Docker bypasses ufw.
+- `www/upload/` runs no PHP (`engine off`, `.php`/`.phtml`/`.phar` denied, `AllowOverride None`) and sends a
+  sandboxing `Content-Security-Policy`, so an uploaded SVG/HTML runs no script.
+- Behind a reverse proxy the project needs `http: proxy:` (README): project-auth limits sign-ins by
+  `getRemoteAddress()`, and Nette marks the session cookie secure only when it sees HTTPS.
+
+## Commands
+No tests or PHPStan; CI runs only the Nette Code Checker. Check a compose change with `docker compose config`.

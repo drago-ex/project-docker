@@ -1,6 +1,7 @@
 # Drago Project Docker
 
-Basic Docker configuration for a PHP server.
+The Docker setup of Drago Project: a PHP 8 Apache server with the project in the image, live sync of changes
+for development and secure defaults for production.
 
 [![PHP version](https://badge.fury.io/ph/drago-ex%2Fproject-docker.svg)](https://badge.fury.io/ph/drago-ex%2Fproject-docker)
 [![Coding Style](https://github.com/drago-ex/project-docker/actions/workflows/coding-style.yml/badge.svg)](https://github.com/drago-ex/project-docker/actions/workflows/coding-style.yml)
@@ -17,12 +18,10 @@ Basic Docker configuration for a PHP server.
 composer require drago-ex/project-docker
 ```
 
-## Files copied into the project
+[Project Tools](https://github.com/drago-ex/project-tools) copies `docker/`, `docker-compose.yaml` and
+`.dockerignore` into the project, where you adapt them. Drago Project installs the package by itself.
 
-The files are copied into the project by [drago-ex/project-tools](https://github.com/drago-ex/project-tools),
-as set in `extra.drago-tools` of this package's `composer.json`.
-
-## Project in the image
+## Project in the Image
 
 The project is copied into the image (`docker/Dockerfile-app`) instead of being mounted from your disk, which is
 slow on Windows. Run `docker compose watch` (or `npm run docker:dev`) while you work: it copies every change of
@@ -31,7 +30,7 @@ and `www/upload/` are mounted, so logs are visible and uploaded files outlast a 
 lists is not copied.
 After changing `vendor/` without `composer.lock`, build the image again with `docker compose up -d --build`.
 
-## PHP extensions
+## PHP Extensions
 
 The image has GD (JPEG, PNG, WebP) for resizing uploaded images and intl for slugs made from names;
 `docker/php.ini` sets the upload limits (64 MB) and `memory_limit` (256 MB, enough to resize photos).
@@ -59,7 +58,13 @@ The image has GD (JPEG, PNG, WebP) for resizing uploaded images and intl for slu
 - Apache hides its version (`docker/conf/security.conf`) and sends `X-Content-Type-Options` and `Referrer-Policy`.
 - Rebuild the image regularly with `docker compose build --pull` to get security fixes of PHP and Debian.
 
-## Docker commands
+## Docker Commands
 
-The available Docker scripts are listed in [`package.json`](https://github.com/drago-ex/project-docker/blob/main/package.json).
-It is not copied into the project; add the scripts you want to the `scripts` of your own `package.json`.
+Drago Project has the npm scripts of [`package.json`](https://github.com/drago-ex/project-docker/blob/main/package.json):
+
+| Script | Does |
+|---|---|
+| `npm run docker:build` | builds the images from scratch |
+| `npm run docker:dev` | starts the containers in debug mode and syncs changes into them |
+| `npm run docker:production` | starts the containers without debug mode |
+| `npm run docker:down` | stops and removes the containers (the data volumes stay) |
